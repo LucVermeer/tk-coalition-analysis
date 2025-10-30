@@ -20,7 +20,7 @@ from PIL import Image
 from pytesseract import TesseractError
 from tqdm import tqdm
 
-DEFAULT_INPUT_DIR = Path("verkiezingsprogrammas")
+DEFAULT_INPUT_DIR = Path("verkiezingsprogrammas_pdf")
 DEFAULT_OUTPUT_DIR = Path("verkiezingsprogrammas_text")
 MIN_TEXT_CHARS_PER_PAGE = 80
 
