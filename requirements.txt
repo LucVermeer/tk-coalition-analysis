@@ -1,0 +1,11 @@
+pytesseract
+PyMuPDF
+Pillow
+tqdm
+transformers
+torch
+pandas
+numpy
+pyarrow
+matplotlib
+seaborn
