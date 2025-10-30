@@ -92,6 +92,6 @@ python3 analyze_similarity.py \
 
 Dit script:
 
-- bouwt voor iedere partij het gemiddelde topic-profiel (gesaved als `analysis/party_topic_vectors.parquet` en `.csv`);
+- bouwt voor iedere partij (mapnaam in `verkiezingsprogrammas_predictions/`) het gemiddelde topic-profiel (gesaved als `analysis/party_topic_vectors.parquet` en `.csv`);
 - maakt een cosine-similaritymatrix (`analysis/party_similarity_matrix.csv`);
 - schrijft per partijpaar de belangrijkste gezamenlijke topics en grootste verschillen naar `analysis/pairwise_contributions.json`.

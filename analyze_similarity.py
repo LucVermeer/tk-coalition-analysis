@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from collections import defaultdict
 from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
@@ -81,21 +82,28 @@ def _prob_list_to_dict(items: List[List]) -> Dict[str, float]:
 
 
 def aggregate_vectors_safe(prediction_paths: List[Path], base_dir: Path, encoding: str) -> pd.DataFrame:
-    records = []
+    party_vectors: Dict[str, List[pd.Series]] = defaultdict(list)
     for path in prediction_paths:
         prob_df = load_probabilities(path, encoding)
         if prob_df.empty:
             continue
         vector = prob_df.mean(axis=0)
-        relative_name = path.relative_to(base_dir).with_suffix("").as_posix()
-        vector.name = relative_name
-        records.append(vector)
-    if not records:
+        relative = path.relative_to(base_dir)
+        party = relative.parts[0] if relative.parts else path.stem
+        vector.name = party
+        party_vectors[party].append(vector)
+    if not party_vectors:
         return pd.DataFrame()
-    df = pd.DataFrame(records).fillna(0.0)
-    df.index.name = "program"
-    df.sort_index(inplace=True)
-    return df
+    aggregated = []
+    for party, series_list in party_vectors.items():
+        party_df = pd.DataFrame(series_list)
+        mean_vector = party_df.mean(axis=0)
+        mean_vector.name = party
+        aggregated.append(mean_vector)
+    result = pd.DataFrame(aggregated).fillna(0.0)
+    result.index.name = "program"
+    result.sort_index(inplace=True)
+    return result
 
 
 def compute_cosine_similarity(vectors: pd.DataFrame) -> pd.DataFrame:
